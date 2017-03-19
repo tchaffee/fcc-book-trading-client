@@ -1,0 +1,31 @@
+- hosts: all
+  become: yes
+  vars:
+  - node_packages: null
+
+  pre_tasks:
+  - name: update apt cache
+    apt: update_cache=yes
+
+# default-jre, chromium*, and xvfb are needed for selenium browser testing.
+  tasks:
+  - name: Install packages
+    apt:
+      name: "{{item}}"
+      state: latest
+    with_items:
+     - git
+     - default-jre
+     - chromium-browser
+     - chromium-chromedriver
+     - xvfb
+
+# Need to create link to chromium-chromedriver
+
+  - name: Create react app
+    npm:
+      name: create-react-app
+      global: yes
+
+  roles:
+  - fubarhouse.nodejs

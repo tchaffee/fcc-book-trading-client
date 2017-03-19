@@ -1,0 +1,29 @@
+{
+  "name": "fcc-book-trading-client",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://172.28.128.3:8081",
+  "dependencies": {
+    "auth0-lock": "^10.11.0",
+    "bootstrap": "^3.3.7",
+    "jwt-decode": "^2.1.0",
+    "react": "^15.4.2",
+    "react-bootstrap": "^0.30.8",
+    "react-dom": "^15.4.2",
+    "react-router": "^3.0.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chromedriver": "^2.28.0",
+    "cucumber": "^2.0.0-rc.9",
+    "react-scripts": "0.9.4",
+    "selenium-webdriver": "^3.3.0",
+    "xvfb": "^0.2.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "./node_modules/.bin/cucumber-js test",
+    "eject": "react-scripts eject"
+  }
+}
