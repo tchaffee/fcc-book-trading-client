@@ -2,7 +2,7 @@
 
 import { EventEmitter } from 'events'
 import Auth0Lock from 'auth0-lock';
-import { browserHistory } from 'react-router';
+// import { browserHistory } from 'react-router';
 import { isTokenExpired } from './jwtHelper';
 
 export default class AuthService extends EventEmitter {
@@ -24,13 +24,14 @@ export default class AuthService extends EventEmitter {
     this.lock.on('authorization_error', this._authorizationError.bind(this));
     // binds login functions to keep this context
     this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
   };
 
   _doAuthentication(authResult) {
     // Saves the user token
     this.setToken(authResult.idToken);
     // navigate to the home route
-    browserHistory.replace('/home');
+    // browserHistory.replace('/');
 
     this.lock.getProfile(authResult.idToken, (error, profile) => {
        if (error) {
@@ -39,6 +40,8 @@ export default class AuthService extends EventEmitter {
          this.setProfile(profile);
        }
      });
+
+     this.emit('authenticated', authResult);
   };
 
   _authorizationError(error){
@@ -84,6 +87,8 @@ export default class AuthService extends EventEmitter {
     // Clear user token and profile data from local storage
     localStorage.removeItem('id_token');
     localStorage.removeItem('profile');
+    //  browserHistory.replace('/');
+    this.emit('logout');
   };
 
   _checkStatus(response) {

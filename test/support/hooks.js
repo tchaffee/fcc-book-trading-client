@@ -11,7 +11,7 @@ defineSupportCode(function({ After, registerHandler }) {
 
   After(function() {
     console.log('trying to quit browser...');
-    return this.browser.quit();
+    return this.driver.quit();
   });
 
   registerHandler('BeforeFeatures', function (features, callback) {

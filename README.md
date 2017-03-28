@@ -2,14 +2,15 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 To start the app
 ```
-vagrant ssh
-cd /vagrant
-npm start
+vagrant up
+vagrant ssh -c "cd /vagrant && npm start"
 ```
 
 On your local box you should be able to view the app at http://localhost:3000
 
 ## Testing
+From the vagrant box:
+
 `npm run test [-- cucumber-args]`
 
 For example:
