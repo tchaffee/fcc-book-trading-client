@@ -17,5 +17,5 @@ yarn-debug.log*
 yarn-error.log*
 .vagrant
 
-# Not sure where this file comes from.
+# Not sure where this file comes from, but I think it's from Vagrant.
 ubuntu-xenial-16.04-cloudimg-console.log

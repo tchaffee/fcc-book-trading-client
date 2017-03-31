@@ -1,0 +1,13 @@
+.dropdownThumb {
+  height: 20px;
+  margin-right: 10px;
+}
+
+.bootstrap-typeahead-input {
+  width: 500px;
+  margin-right: 10px;
+}
+
+.bootstrap-typeahead-input > .bootstrap-typeahead-input-main {
+  width: 500px !important;
+}

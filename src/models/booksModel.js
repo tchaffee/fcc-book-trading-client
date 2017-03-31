@@ -23,19 +23,33 @@ function getMyBooks () {
   });
 }
 
-// TODO: Need to add body, eh?
-function addBook (bookName) {
+function addBook (googleId, title) {
   return auth.fetch('/api/users/me/books/',
     {
       method: 'POST',
  	    body: JSON.stringify({
-		    bookName: bookName
+		    googleId: googleId,
+        title: title
 	    })     
     }
   )
   .then(response => {
-    return response.json();
+    return response;
   });
 }
 
-export { getAllBooks, getMyBooks };
+function deleteBook (googleId) {
+  return auth.fetch('/api/users/me/books/',
+    {
+      method: 'DELETE',
+ 	    body: JSON.stringify({
+		    googleId: googleId
+	    })     
+    }
+  )
+  .then(response => {
+    return response;
+  });
+}
+
+export { getAllBooks, getMyBooks, addBook, deleteBook };

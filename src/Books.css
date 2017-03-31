@@ -1,0 +1,21 @@
+.coverContainer {
+  display: inline-block;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  margin: 15px;
+  padding: 15px;
+  vertical-align: top;
+}
+
+.bookItem {
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 0px;
+}
+
+button.close {
+  float: none;
+  vertical-align: top;
+  margin-right: -15px;
+  margin-top: -15px;
+}

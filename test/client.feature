@@ -18,7 +18,6 @@ Feature: See a list of books
     When I click on "My Books"
     Then I should see a book with title "My book"
 
-  @now
   Scenario: Add a book
     Given I am on the book trading website home page
     And I login with user "test@foobar.com" and password "foobar"
@@ -26,6 +25,16 @@ Feature: See a list of books
     And I type "Animal Farm" in the "add-books-input" input
     And I click on "Add"
     Then I should see a book with title "Animal Farm"
+
+  @now
+  Scenario: Dropdown for books
+    Given I am on the book trading website home page
+    And I login with user "test@foobar.com" and password "foobar"
+    When I click on "My Books"
+    And I type "Animal Farm" in the "add-books-input" input
+    Then I should see a dropdown with "Animal Farm" in the list
+
+
 
 #  Scenario: See my trade requests
 #    Given I am on the book trading website home page

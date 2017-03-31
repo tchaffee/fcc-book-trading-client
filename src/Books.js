@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
+import { Grid, Row, Col } from 'react-bootstrap';
+
 import Trades from './Trades';
 import AddBook from './AddBook';
+import DeleteBook from './DeleteBook';
+import './Books.css';
 
-function loadData(props, that) {
-  console.log('loading new books data...');
-  props.booksGetter()
-  .then(data => {
-    that.setState({
-      booksData: data.books
-    });
-  });
-}
+
 
 class Books extends Component {
 
@@ -20,42 +16,100 @@ class Books extends Component {
     this.state = {
       booksData: []
     };
+
+    this.handleAddBook = this.handleAddBook.bind(this);
+    this.handleDeleteBook = this.handleDeleteBook.bind(this);
+    this.loadData = this.loadData.bind(this);
   }
 
   componentWillMount () {
-    console.log('willMount');
-    console.log('this.props');
-    console.log(this.props);
-    loadData(this.props, this);
+    this.loadData(this.props.booksGetter);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.pathname !== this.props.location.pathname) {
-      loadData(nextProps, this);
+      this.loadData(nextProps.booksGetter);
     }
+  }
+
+  loadData(booksGetter) {
+    booksGetter()
+    .then(data => {
+      this.setState({
+        booksData: data.books
+      });
+    })
+    .catch(reason => {
+      console.log('Books.js loaddata caught an error.');
+      console.log(reason);
+    });
+  }
+
+  handleAddBook(googleId, title) {
+    return this.props.addBook(googleId, title)
+    .then( () => {
+      this.loadData(this.props.booksGetter);
+    })
+    .catch(reason => {
+      if ('Error: Unauthorized' === reason.toString()) {
+        this.props.history.replace('/notauthorized');
+      }
+    });
+  }
+
+  handleDeleteBook(googleId) {
+    return this.props.deleteBook(googleId)
+    .then( () => {
+      this.loadData(this.props.booksGetter);
+    })
+    .catch(reason => {
+      if ('Error: Unauthorized' === reason.toString()) {
+        this.props.history.replace('/notauthorized');
+      }
+    });
   }
 
   render() {
 
     let addBook = null;
 
+    console.log('Books.js props');
+    console.log(this.props);
+
     // My books page? Allow user to add books.
     if (this.props.location.pathname === '/mybooks') {
-      addBook = <AddBook addBook={this.props.addBook} />;
+      addBook = <AddBook addBook={this.handleAddBook} />;
     }
 
-
     const booksList = this.state.booksData.map( (el, index) => {
+
+      let deleteBook = null;
+
+      if (this.props.location.pathname === '/mybooks') {
+        deleteBook = <DeleteBook deleteBook={this.handleDeleteBook} googleId={el.googleId} />;
+      }
+
       return (
-        <div key={el._id} className="Book">{el.title}</div>
+          <div key={el._id} className="coverContainer">
+            <span className="book">
+              <img alt={el.title} className="bookItem" src={`http://books.google.com/books/content?id=${el.googleId}&printsec=frontcover&img=1&zoom=5&edge=curl`} />
+            </span>
+            {deleteBook}
+          </div>
       );
     });
 
     return (
-      <div className="BookList">
+      <div className="bookList">
         <Trades />
         {addBook}
-        {booksList}
+        <Grid>
+          <Row className="bookRow">
+            <Col lg={12} className="bookColumns">
+              {booksList}
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
