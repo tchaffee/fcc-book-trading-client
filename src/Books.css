@@ -5,6 +5,7 @@
   margin: 15px;
   padding: 15px;
   vertical-align: top;
+  position: relative;
 }
 
 .bookItem {
@@ -18,4 +19,20 @@ button.close {
   vertical-align: top;
   margin-right: -15px;
   margin-top: -15px;
+}
+
+button.trade {
+  float: none;
+  vertical-align: top;
+  margin-right: -15px;
+  margin-top: -15px;
+}
+
+.myBooks-icon {
+  border: 0;
+  position: absolute !important;
+  top: 3px !important;
+  left: 3px !important;
+  font-size: 12px;
+  background: transparent;
 }

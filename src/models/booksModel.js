@@ -2,7 +2,7 @@ import AuthService from '../utils/AuthService';
 const auth = new AuthService('dBLJpCZvLmQEoD0uoXmRMTby8F2b7ju1', 'tchaffee.auth0.com');
 
 function getAllBooks () {
-  return fetch('/api/books/',
+  return auth.fetch('/api/books',
     {
       method: 'GET'
     }
@@ -13,7 +13,7 @@ function getAllBooks () {
 }
 
 function getMyBooks () {
-  return auth.fetch('/api/users/me/books/',
+  return auth.fetch('/api/users/me/books',
     {
       method: 'GET'
     }
@@ -24,7 +24,7 @@ function getMyBooks () {
 }
 
 function addBook (googleId, title) {
-  return auth.fetch('/api/users/me/books/',
+  return auth.fetch('/api/users/me/books',
     {
       method: 'POST',
  	    body: JSON.stringify({
@@ -39,7 +39,7 @@ function addBook (googleId, title) {
 }
 
 function deleteBook (googleId) {
-  return auth.fetch('/api/users/me/books/',
+  return auth.fetch('/api/users/me/books',
     {
       method: 'DELETE',
  	    body: JSON.stringify({
@@ -52,4 +52,19 @@ function deleteBook (googleId) {
   });
 }
 
-export { getAllBooks, getMyBooks, addBook, deleteBook };
+function tradeBook (owner, googleId) {
+  return auth.fetch('/api/users/me/traderequests',
+    {
+      method: 'POST',
+ 	    body: JSON.stringify({
+        owner: owner,
+		    googleId: googleId
+	    })     
+    }
+  )
+  .then(response => {
+    return response;
+  });
+}
+
+export { getAllBooks, getMyBooks, addBook, deleteBook, tradeBook };

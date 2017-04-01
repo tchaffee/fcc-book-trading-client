@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col, Button } from 'react-bootstrap';
 
 import Trades from './Trades';
 import AddBook from './AddBook';
 import DeleteBook from './DeleteBook';
+import TradeBook from './TradeBook';
 import './Books.css';
 
 
@@ -19,6 +20,7 @@ class Books extends Component {
 
     this.handleAddBook = this.handleAddBook.bind(this);
     this.handleDeleteBook = this.handleDeleteBook.bind(this);
+    this.handleTradeBook = this.handleTradeBook.bind(this);
     this.loadData = this.loadData.bind(this);
   }
 
@@ -69,6 +71,18 @@ class Books extends Component {
     });
   }
 
+  handleTradeBook(owner, googleId, requester) {
+    return this.props.tradeBook(owner, googleId)
+    .then( () => {
+      this.loadData(this.props.booksGetter);
+    })
+    .catch(reason => {
+      if ('Error: Unauthorized' === reason.toString()) {
+        this.props.history.replace('/notauthorized');
+      }
+    });
+  }
+
   render() {
 
     let addBook = null;
@@ -84,9 +98,28 @@ class Books extends Component {
     const booksList = this.state.booksData.map( (el, index) => {
 
       let deleteBook = null;
+      let tradeBook = null;
+      let myBook = null;
 
       if (this.props.location.pathname === '/mybooks') {
         deleteBook = <DeleteBook deleteBook={this.handleDeleteBook} googleId={el.googleId} />;
+      }
+
+      if (this.props.location.pathname === '/allbooks') {
+        if (this.props.user.user_id !== el.owner) {
+          tradeBook = <TradeBook 
+            tradeBook={this.handleTradeBook} 
+            googleId={el.googleId} 
+            owner={el.owner} 
+            requested={el.requested}
+          />;
+        }
+      }
+
+      if (this.props.user.user_id == el.owner) {
+        myBook = ( 
+          <span className="myBooks-icon glyphicon glyphicon-user" aria-hidden="true" />
+        );
       }
 
       return (
@@ -94,7 +127,9 @@ class Books extends Component {
             <span className="book">
               <img alt={el.title} className="bookItem" src={`http://books.google.com/books/content?id=${el.googleId}&printsec=frontcover&img=1&zoom=5&edge=curl`} />
             </span>
+            {myBook}
             {deleteBook}
+            {tradeBook}
           </div>
       );
     });

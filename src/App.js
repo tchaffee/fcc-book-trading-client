@@ -7,7 +7,7 @@ import NavHeader from './NavHeader';
 import Logout from './Logout';
 import Login from './Login';
 
-import { getAllBooks, getMyBooks, addBook, deleteBook } from './models/booksModel';
+import { getAllBooks, getMyBooks, addBook, deleteBook, tradeBook } from './models/booksModel';
 
 import AuthService from './utils/AuthService';
 const auth = new AuthService('dBLJpCZvLmQEoD0uoXmRMTby8F2b7ju1', 'tchaffee.auth0.com');
@@ -65,13 +65,20 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path='/login' render={routeProps => <Login {...routeProps} auth={auth} authenticatedRedirect="/" />} />
-            <PrivateRoute path='/allbooks' component={Books} booksGetter={getAllBooks} />
+            <PrivateRoute 
+              path='/allbooks' 
+              component={Books} 
+              booksGetter={getAllBooks} 
+              tradeBook={tradeBook}
+              user={auth.getProfile()} 
+            />
             <PrivateRoute 
               path='/mybooks' 
               component={Books} 
               booksGetter={getMyBooks} 
               addBook={addBook} 
               deleteBook={deleteBook} 
+              user={auth.getProfile()} 
             />
             <PrivateRoute path='/logout' component={Logout} auth={auth} redirectPath="/" />
             <Route path='/notauthorized' component={NotAuthorized} />
