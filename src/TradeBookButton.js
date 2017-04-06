@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 // import './DeleteBook.css';
 
-class TradeBook extends Component {
+class TradeBookButton extends Component {
 
   constructor(props) {
     super(props);
@@ -27,6 +27,10 @@ class TradeBook extends Component {
       icon = 'glyphicon-time';
     }
 
+    if (this.props.approved) {
+      icon = 'glyphicon-ok-sign';
+    }
+    
     return (
       <Button type="button" className="trade close" onClick={this.handleTrade}>
         <span className={'glyphicon ' + icon} aria-hidden="true" />
@@ -35,4 +39,4 @@ class TradeBook extends Component {
   }
 }
 
-export default TradeBook;
+export default TradeBookButton;

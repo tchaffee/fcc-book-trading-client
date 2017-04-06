@@ -1,6 +1,6 @@
 import './NavHeader.css';
 import React, { Component, PropTypes as T } from 'react';
-import { Navbar, Nav, Button } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom'
 
 import AuthService from './utils/AuthService';
@@ -41,7 +41,6 @@ class NavHeader extends Component {
     });
 
     props.auth.on('logout', () => {
-      console.log('Caught logout event.');
       self.setState({ loggedIn: self.props.auth.loggedIn() });
     });       
 
@@ -67,8 +66,8 @@ class NavHeader extends Component {
           <Navbar.Text pullRight>Welcome {this.props.auth.getProfile().name}</Navbar.Text>
           <Nav pullRight >
             <RouterLink to="/">Home</RouterLink>
-            <RouterLink to="/tradesby">Requested by Me</RouterLink>
-            <RouterLink to="/tradesfrom">Requested from Me</RouterLink>
+            <RouterLink to="/mytrades">Requests by Me</RouterLink>
+            <RouterLink to="/tradesforme">Requests for Me</RouterLink>
             <RouterLink to="/allbooks">All Books</RouterLink>
             <RouterLink to="/mybooks">
               <span className="myBook-icon glyphicon glyphicon-user" aria-hidden="true" />

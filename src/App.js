@@ -7,7 +7,7 @@ import NavHeader from './NavHeader';
 import Logout from './Logout';
 import Login from './Login';
 
-import { getAllBooks, getMyBooks, addBook, deleteBook, tradeBook } from './models/booksModel';
+import { getAllBooks, getMyBooks, addBook, deleteBook, tradeBook, getMyTrades, getTradesForMe, approveTradeRequest } from './models/booksModel';
 
 import AuthService from './utils/AuthService';
 const auth = new AuthService('dBLJpCZvLmQEoD0uoXmRMTby8F2b7ju1', 'tchaffee.auth0.com');
@@ -70,7 +70,8 @@ class App extends Component {
               component={Books} 
               booksGetter={getAllBooks} 
               tradeBook={tradeBook}
-              user={auth.getProfile()} 
+              tradeBookButton={true}
+              user={auth.getProfile} 
             />
             <PrivateRoute 
               path='/mybooks' 
@@ -78,7 +79,21 @@ class App extends Component {
               booksGetter={getMyBooks} 
               addBook={addBook} 
               deleteBook={deleteBook} 
-              user={auth.getProfile()} 
+              user={auth.getProfile} 
+            />
+            <PrivateRoute 
+              path='/mytrades' 
+              component={Books} 
+              booksGetter={getMyTrades} 
+              tradeBookButton={true} 
+              user={auth.getProfile}
+            />
+            <PrivateRoute
+              path='/tradesforme' 
+              component={Books}
+              booksGetter={getTradesForMe} 
+              approveTradeRequest={approveTradeRequest}
+              user={auth.getProfile} 
             />
             <PrivateRoute path='/logout' component={Logout} auth={auth} redirectPath="/" />
             <Route path='/notauthorized' component={NotAuthorized} />

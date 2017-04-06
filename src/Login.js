@@ -6,7 +6,6 @@ class Login extends Component {
     super(props);
 
     props.auth.on('authenticated', () => {
-      console.log('Redirecting using history object...');
       props.history.replace(props.authenticatedRedirect);
     });
 

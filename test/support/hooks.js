@@ -10,7 +10,6 @@ const xvfb = new Xvfb({
 defineSupportCode(function({ After, registerHandler }) {
 
   After(function() {
-    console.log('trying to quit browser...');
     return this.driver.quit();
   });
 

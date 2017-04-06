@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Button } from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 
-import Trades from './Trades';
 import AddBook from './AddBook';
 import DeleteBook from './DeleteBook';
-import TradeBook from './TradeBook';
+import TradeBookButton from './TradeBookButton';
+import ApproveTradeButton from './ApproveTradeButton';
 import './Books.css';
-
-
 
 class Books extends Component {
 
@@ -15,12 +13,14 @@ class Books extends Component {
     super(props);
 
     this.state = {
-      booksData: []
+      booksData: [],
+      isFetching: true
     };
 
     this.handleAddBook = this.handleAddBook.bind(this);
     this.handleDeleteBook = this.handleDeleteBook.bind(this);
     this.handleTradeBook = this.handleTradeBook.bind(this);
+    this.handleApproveTradeRequest = this.handleApproveTradeRequest.bind(this);
     this.loadData = this.loadData.bind(this);
   }
 
@@ -35,15 +35,14 @@ class Books extends Component {
   }
 
   loadData(booksGetter) {
+    this.setState({ isFetching: true });
+    
     booksGetter()
     .then(data => {
       this.setState({
-        booksData: data.books
+        booksData: data.books,
+        isFetching: false
       });
-    })
-    .catch(reason => {
-      console.log('Books.js loaddata caught an error.');
-      console.log(reason);
     });
   }
 
@@ -83,40 +82,76 @@ class Books extends Component {
     });
   }
 
+  handleApproveTradeRequest(googleId) {
+    return this.props.approveTradeRequest(googleId)
+    .then( () => {
+      this.loadData(this.props.booksGetter);
+    })
+    .catch(reason => {
+      if ('Error: Unauthorized' === reason.toString()) {
+        this.props.history.replace('/notauthorized');
+      }
+    });
+  }
+
   render() {
 
     let addBook = null;
 
-    console.log('Books.js props');
-    console.log(this.props);
+    // Loading
+    if (this.state.isFetching) {
+      return <h2>Loading data....</h2>;
+    }
 
     // My books page? Allow user to add books.
     if (this.props.location.pathname === '/mybooks') {
       addBook = <AddBook addBook={this.handleAddBook} />;
     }
 
+    // No results
+    if (this.state.booksData.length <= 0) {
+      return (
+        <div className="bookList">
+          {addBook}
+          <h2>No results</h2>
+        </div>
+      );
+    }
+
+    // TODO: Move this to a BooksList component.
     const booksList = this.state.booksData.map( (el, index) => {
 
       let deleteBook = null;
-      let tradeBook = null;
+      let tradeBookButton = null;
       let myBook = null;
+      let approveTradeButton = null;
+
+      // "Requests for Me" page? Allow user to approve requests.
+      if (this.props.location.pathname === '/tradesforme') {
+        approveTradeButton = <ApproveTradeButton 
+          approveTradeRequest={this.handleApproveTradeRequest} 
+          tradeApproved={el.tradeApproved}
+          googleId={el.googleId} 
+        />;
+      }
 
       if (this.props.location.pathname === '/mybooks') {
         deleteBook = <DeleteBook deleteBook={this.handleDeleteBook} googleId={el.googleId} />;
       }
 
-      if (this.props.location.pathname === '/allbooks') {
-        if (this.props.user.user_id !== el.owner) {
-          tradeBook = <TradeBook 
+      if (this.props.tradeBookButton) {
+        if (this.props.user().user_id !== el.owner) {
+          tradeBookButton = <TradeBookButton 
             tradeBook={this.handleTradeBook} 
             googleId={el.googleId} 
             owner={el.owner} 
             requested={el.requested}
+            approved={el.tradeApproved}
           />;
         }
       }
 
-      if (this.props.user.user_id == el.owner) {
+      if (this.props.user().user_id === el.owner) {
         myBook = ( 
           <span className="myBooks-icon glyphicon glyphicon-user" aria-hidden="true" />
         );
@@ -129,14 +164,14 @@ class Books extends Component {
             </span>
             {myBook}
             {deleteBook}
-            {tradeBook}
+            {tradeBookButton}
+            {approveTradeButton}
           </div>
       );
     });
 
     return (
       <div className="bookList">
-        <Trades />
         {addBook}
         <Grid>
           <Row className="bookRow">
