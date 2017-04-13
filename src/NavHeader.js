@@ -29,7 +29,7 @@ class NavHeader extends Component {
 
     this.state = {
       profile: props.auth.getProfile(),
-      loggedIn: props.auth.loggedIn()    
+      loggedIn: props.auth.loggedIn()
     }
 
     props.auth.on('profile_updated', (newProfile) => {
@@ -42,17 +42,17 @@ class NavHeader extends Component {
 
     props.auth.on('logout', () => {
       self.setState({ loggedIn: self.props.auth.loggedIn() });
-    });       
+    });
 
 
   }
 
 //            <LinkContainer to="/allbooks">
 //              <NavItem eventKey={3}>All Books</NavItem>
-//            </LinkContainer>          
+//            </LinkContainer>
 //            <NavItem eventKey={2}>Log Out!</NavItem>
 //        <NavItem eventKey={1} data-test="Login" href="#">Login</NavItem>
-  
+
   render() {
 
     let loginOrMenu;
@@ -61,18 +61,16 @@ class NavHeader extends Component {
       loginOrMenu = (
         <div>
           <Nav pullRight >
-            <RouterLink to="/logout">Log Out...</RouterLink>
-          </Nav>
-          <Navbar.Text pullRight>Welcome {this.props.auth.getProfile().name}</Navbar.Text>
-          <Nav pullRight >
             <RouterLink to="/">Home</RouterLink>
             <RouterLink to="/mytrades">Requests by Me</RouterLink>
             <RouterLink to="/tradesforme">Requests for Me</RouterLink>
             <RouterLink to="/allbooks">All Books</RouterLink>
             <RouterLink to="/mybooks">
+              {'My Books '}
               <span className="myBook-icon glyphicon glyphicon-user" aria-hidden="true" />
-              My Books
             </RouterLink>
+            <RouterLink to="/profile">{this.props.auth.getProfile().name} <span className="settings-icon glyphicon glyphicon-cog" aria-hidden="true"></span></RouterLink>
+            <RouterLink to="/logout">Logout</RouterLink>
           </Nav>
       </div>);
     // Not logged in

@@ -6,8 +6,10 @@ import Books from './Books';
 import NavHeader from './NavHeader';
 import Logout from './Logout';
 import Login from './Login';
+import Profile from './Profile';
 
 import { getAllBooks, getMyBooks, addBook, deleteBook, tradeBook, getMyTrades, getTradesForMe, approveTradeRequest } from './models/booksModel';
+import { getProfile, updateProfile } from './models/usersModel';
 
 import AuthService from './utils/AuthService';
 const auth = new AuthService('dBLJpCZvLmQEoD0uoXmRMTby8F2b7ju1', 'tchaffee.auth0.com');
@@ -55,9 +57,6 @@ class App extends Component {
       );
     };
 
- //          <PrivateRoute path='/mybooks' component={Books} booksGetter={getMyBooks} />
-
-
     return (
       <Router history={history}>
         <div className="App">
@@ -94,6 +93,13 @@ class App extends Component {
               booksGetter={getTradesForMe} 
               approveTradeRequest={approveTradeRequest}
               user={auth.getProfile} 
+            />
+            <PrivateRoute
+              path='/profile' 
+              component={Profile}
+              user={auth.getProfile}
+              getProfile={getProfile}
+              updateProfile={updateProfile} 
             />
             <PrivateRoute path='/logout' component={Logout} auth={auth} redirectPath="/" />
             <Route path='/notauthorized' component={NotAuthorized} />

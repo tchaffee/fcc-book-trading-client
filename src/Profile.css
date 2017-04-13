@@ -1,0 +1,8 @@
+.profileContainer {
+  border: 1px solid gray;
+  border-radius: 4px;
+  width: 600px !important;
+  margin: auto;
+  text-align: left;
+  padding: 30px;
+}
